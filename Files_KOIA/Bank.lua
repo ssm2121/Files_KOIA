@@ -5742,5 +5742,5 @@ end
 
 end
 return {
-KOIA = Reply
+KOIA = Bank
 }
