@@ -1,8 +1,6 @@
-local function Reply(msg)
+local function Bank(msg)
 local text = msg.content_.text_
-if ChatType == 'sp' or ChatType == 'gp'  then
-if not Devmuh:get(KOIA..'muh:Lock:Reply'..msg.chat_id_) then
-
+if not Devmuh:get(KOIA..'muh:Lock:Bank'..msg.chat_id_) then
 if text == "بنك" and ChCheck(msg) then
 if Redis:get(KOIA.. "Bank"..msg.chat_id) then
     if Redis:get(KOIA..'Warning:Chat'..msg.chat_id)  then
