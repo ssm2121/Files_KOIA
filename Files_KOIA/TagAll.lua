@@ -7,33 +7,41 @@ if Devmuh:get(KOIA.."muh:TagAll:Time"..msg.chat_id_..':'..msg.sender_user_id_) t
 Dev_muh(msg.chat_id_, msg.id_, 1, '⌔︙انتظر دقيقه بعد ارسال الامر', 1, 'md')
 return false  
 end
-Devmuh:setex(KOIA..'muh:TagAll:Time'..msg.chat_id_..':'..msg.sender_user_id_,300,true)
-tdcli_function({ID="GetChannelFull",channel_id_ = msg.chat_id_:gsub('-100','')},function(arg,data) 
-tdcli_function({ID = "GetChannelMembers",channel_id_ = msg.chat_id_:gsub('-100',''), offset_ = 0,limit_ = data.member_count_},function(arg,dp)
-x = 0
-tags = 0
-local list = dp.members_
-for k, v in pairs(list) do
-tdcli_function({ID="GetUser",user_id_ = v.user_id_},function(extra,result,success)
-if x == 5 or x == tags or k == 0 then
-tags = x + 5
-t = "#all"
+if text:match("^all (.*)$") or text:match("^@all (.*)$") or text == "@all" or text == "all" then 
+local ttag = text:match("^all (.*)$") or text:match("^@all (.*)$") 
+if not msg.Manager then
+return LuaTele.sendText(msg.chat_id,msg.id,Reply_Status(msg.sender_id.user_id,'⌔︙هذا الامر يخص ↫ '..Controller_Num(7)..' .\n').Warning,"md",true)    
 end
-x = x + 1
-TagName = result.first_name_
-TagName = TagName:gsub("]","")
-TagName = TagName:gsub("[[]","")
-t = t..", ["..TagName.."](tg://user?id="..v.user_id_..")"
-if x == 1 or x == tags or k == 0 then
-local Text = t:gsub('#all,','#all\n')
-SendText(msg.chat_id_,Text,msg.id_/2097152/0.5,'md')
+if Redis:get(KOIA.."lockalllll") == "off" then
+local Info_Members = LuaTele.searchChatMembers(msg.chat_id, "*", 200)
+x = 0 
+tags = 0 
+local list = Info_Members.members
+for k, v in pairs(list) do 
+local data = LuaTele.getUser(v.member_id.user_id)
+if x == 5 or x == tags or k == 0 then 
+tags = x + 5 
+if ttag then
+t = "#all "..ttag.."" 
+else
+t = "#all "
 end
-end,nil)
+end 
+x = x + 1 
+tagname = data.first_name
+tagname = tagname:gsub("]","") 
+tagname = tagname:gsub("[[]","") 
+t = t..", ["..tagname.."](tg://user?id="..v.member_id.user_id..")" 
+if x == 5 or x == tags or k == 0 then 
+if ttag then
+Text = t:gsub('#all '..ttag..',','#all '..ttag..'\n') 
+else 
+Text = t:gsub('#all,','#all\n')
 end
-end,nil)
-end,nil)
-end
-end
+LuaTele.sendText(msg.chat_id,0,Text,'md',true)
+end 
+end 
+end 
 end
 
 end
